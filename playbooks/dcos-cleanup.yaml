@@ -1,0 +1,47 @@
+---
+- hosts: dcos_all
+  remote_user: centos
+  name: Clean up any prior installation files
+  become: false
+  vars:
+    INTERFACE_NAME: eno1
+
+  tasks:
+  - name: remove genconf directory
+    file:
+      path: /home/centos/genconf
+      state: absent
+  - name: remove prior installer
+    file:
+      path: /home/centos/dcos_generate_config.sh
+      state: absent
+  - name: Stop running containers
+    shell: docker stop $(docker ps -a -q)
+    ignore_errors: true
+  - name: Stop all docker processes
+    shell: "docker stop $(docker ps -a -q)"
+    ignore_errors: true
+  - name: Remove all docker processes
+    shell: "docker rm $(docker ps -a -q)"
+    ignore_errors: true
+  - name: Remove all docker images
+    shell: "docker rmi $(docker images -a -q)"
+    ignore_errors: true    
+  - name: Uninstall docker
+    yum: name=docker-engine state=absent
+  - name: Uninstall docker-selinux
+    yum: name=docker-engine-selinux state=absent
+  - name: Delete active containers
+    shell: docker rm $(docker ps -a -q)
+    ignore_errors: true
+  - name: delete unnecessary directories
+    file: path={{ item.path }} state=absent
+    with_items:
+    - { path : '/opt/mesosphere' }
+    - { path : '/etc/systemd/system/dcos.target.wants' }
+    - { path : '/var/lib/dcos/exhibitor/zookeeper' }
+    - { path : '/var/lib/docker' }
+    - { path : '/var/lib/dcos' }
+    - { path : '/var/lib/mesos' }
+
+  

@@ -1,7 +1,9 @@
 ---
-- hosts: bootstrap
+- hosts: dcos_bootstrap_public
   remote_user: centos
   become: false
+  vars:
+    CLUSTER_NAME: MFJ_DCOS
 
   tasks:
   - name: Generate and write out DC/OS config.yaml
@@ -11,12 +13,14 @@
 
   - name: Fetch DC/OS installer from Mesosphere
     get_url:
-      url: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
+      url: http://downloads.mesosphere.io/dcos-enterprise/stable/dcos_generate_config.ee.sh
       dest: /home/centos
 
   - name: Generate DC/OS install bits
     become: true
-    shell: bash /home/centos/dcos_generate_config.sh
+    shell: "bash dcos_generate_config.ee.sh"
+    args: 
+      chdir: /home/centos 
 
   - name: Start nginx Docker container
     become: true
@@ -24,6 +28,6 @@
       name: nginx
       image: nginx:latest
       ports:
-      - "80:80"
+      - "8080:80"
       volumes:
       - "/home/centos/genconf/serve:/usr/share/nginx/html:ro"

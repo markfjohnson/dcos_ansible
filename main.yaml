@@ -2,8 +2,9 @@
 - name: Top level play for the entire installation
   hosts: all
 
-- include: playbooks/selinux.yaml
+- include: playbooks/dcos-cleanup.yaml
 - include: playbooks/groups.yaml
+- include: playbooks/selinux.yaml
 - include: playbooks/docker.yaml
 - include: playbooks/utilities.yaml
 - include: playbooks/dcos-all-preinstall.yaml

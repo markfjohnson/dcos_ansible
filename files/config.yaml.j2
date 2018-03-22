@@ -1,13 +1,24 @@
-bootstrap_url: http://{{ hostvars[groups['bootstrap'][0]].ansible_eth0['ipv4']['address'] }}
-cluster_name: Test-Cluster
+bootstrap_url: http://{% for host in groups['dcos_bootstrap_private'] %}{{ host  }}{% endfor %}
+
+cluster_name: {{ CLUSTER_NAME }}
 customer_key: 12345-12345-12345-12345-12345-123456
 exhibitor_storage_backend: static
 master_discovery: static
+superuser_password_hash: $6$rounds=656000$8tHaNDNiUfQhXQtY$J3n40bLq4VhM2/8y10KkpbntqgVXADpWuf4muoaF0VfdiNcfFCgujOmho2HGdTLIeZoh.cEYI8wqJnrwIzPfw.
 master_list:
-{% for host in groups['masters'] %}
-- {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}
-{% endfor %}
+- {% for host in groups['master_node_private'] %}{{ host  }}{% endfor %}
+
 resolvers:
 - 169.254.169.253
 - 8.8.8.8
-security: disabled
+security: permissive
+dcos_overlay_network:
+  vtep_subnet: 44.128.0.0/20
+  vtep_mac_oui: 70:B3:D5:00:00:00
+  overlays:
+  - name: dcos
+    subnet: 9.0.0.0/8
+    prefix: 26
+  - name: dcos1
+    subnet: 192.168.0.0/16
+    prefix: 24

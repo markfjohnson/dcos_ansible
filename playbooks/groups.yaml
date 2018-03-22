@@ -1,9 +1,24 @@
 - hosts: all
   remote_user: centos
   become: true
-
+  vars:
+    default_user: "centos"
   tasks:
+  - name: Clean out old home directory if it existed
+    file: path=/home/{{default_user}} state=absent
   - name: Create nogroup system group
     group:
       name: nogroup
       system: yes
+  - name: Create Project default user
+    user:
+      name: centos
+      shell: /bin/bash
+      state: present
+      createhome: yes
+      generate_ssh_key: yes
+      groups: wheel,systemd-journal
+      append: no
+      system: yes
+  - name: Create genconf directory for {{ default_user }}
+    file: path=/home/{{default_user}}/genconf state=directory mode=0755

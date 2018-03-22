@@ -2,19 +2,20 @@
 - hosts: all
   remote_user: centos
   become: false
+  vars:
+    INTERFACE_NAME: eno1
 
   tasks:
-  - name: Create genconf directory
-    file:
-      path: /home/centos/genconf
-      state: directory
-      mode: 0755
+#  - name: Distribute ip-detect script
+#    copy:
+#      src: ../files/ip-detect-aws
+#      dest: /home/centos/genconf/ip-detect
 
-  - name: Distribute ip-detect script
-    copy:
-      src: ../files/ip-detect-aws
-      dest: /home/centos/genconf/ip-detect
-
+  - name: Distribute ip-detect script for Physical
+    template: src=../files/ip-detect.j2 dest=/home/centos/genconf/ip-detect
+  - name: Distribute license file
+    template: src=../files/license.txt dest=/home/centos/genconf/license.txt
+  
   - name: Create /tmp/dcos
     file:
       path: /tmp/dcos

@@ -1,39 +1,40 @@
-- hosts: dcos-cluster
+- hosts: dcos_all
   remote_user: centos
+  name: Get boostrap installer
   become: false
-
+  vars:
+    dcos_bootstrap_url: "{{ hostvars[groups['dcos_bootstrap_private'][0]].inventory_hostname }}:8080/dcos_install.sh"
+#hostvars[groups['dcos_bootstrap_private'][0]].ansible_eth0['ipv4']['address'] 
   tasks:
+  - debug: 
+      msg: "################ {{ dcos_bootstrap_url }} ####################"
   - name: Fetch DC/OS installer from Bootstrap Node
     get_url:
-      url: http://{{ hostvars[groups['bootstrap'][0]].ansible_eth0['ipv4']['address'] }}/dcos_install.sh
+      url: http://{{ dcos_bootstrap_url }}
       dest: /tmp/dcos
 
-- hosts: masters
+- hosts: master_node_public
   remote_user: centos
+  name: Install Master
   become: true
 
   tasks:
   - name: Installation of master nodes
-    async: 600
-    poll: 0
     shell: bash /tmp/dcos/dcos_install.sh master
 
-- hosts: public-agents
+- hosts: public_agent
+  name: Install public agent
   remote_user: centos
   become: true
 
   tasks:
   - name: Installation of public agents
-    async: 600
-    poll: 0
     shell: bash /tmp/dcos/dcos_install.sh slave_public
 
-- hosts: private-agents
+- hosts: private_agents
   remote_user: centos
   become: true
 
   tasks:
   - name: Installation of private agents
-    async: 600
-    poll: 0
-    shell: bash /tmp/dcos_install.sh slave
+    shell: bash /tmp/dcos/dcos_install.sh slave
