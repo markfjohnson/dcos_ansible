@@ -1,0 +1,12 @@
+---
+- hosts: dcos_bootstrap_public
+  remote_user: centos
+  become: false
+  vars:
+    CLUSTER_NAME: MFJ_DCOS
+
+  tasks:
+  - name: Generate and write out DC/OS config.yaml
+    template:
+      src: ../files/config.yaml.j2
+      dest: /home/centos/genconf/config.yaml
