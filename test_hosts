@@ -1,20 +1,31 @@
-[bootstrap]
-54.161.17.163 ansible_ssh_port=22 ansible_ssh_user=centos
+[dcos_bootstrap_public]
+192.168.1.110 ansible_ssh_port=22 ansible_ssh_user=root
 
-[masters]
-54.208.14.6 ansible_ssh_port=22 ansible_ssh_user=centos
-52.55.1.180 ansible_ssh_port=22 ansible_ssh_user=centos
-54.174.143.157 ansible_ssh_port=22 ansible_ssh_user=centos
+[dcos_bootstrap_private]
+192.168.1.110 ansible_ssh_port=22 ansible_ssh_user=root
 
-[public-agents]
-54.226.164.86 ansible_ssh_port=22 ansible_ssh_user=centos
+[master_node_public]
+192.168.1.100 ansible_ssh_port=22 ansible_ssh_user=root
 
-[private-agents]
-34.229.237.212 ansible_ssh_port=22 ansible_ssh_user=centos
-34.201.160.124 ansible_ssh_port=22 ansible_ssh_user=centos
-34.229.182.114 ansible_ssh_port=22 ansible_ssh_user=centos
+[master_node_private]
+192.168.1.100 ansible_ssh_port=22 ansible_ssh_user=root
 
-[dcos-cluster:children]
-masters
-public-agents
-private-agents
+[public_agent]
+192.168.1.101  ansible_ssh_port=22 ansible_ssh_user=root
+
+[private_agents]
+192.168.1.102   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.103   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.104   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.105   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.106   ansible_ssh_port=22 ansible_ssh_user=root
+
+[dcos_all]
+192.168.1.100   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.101   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.102   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.103   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.104   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.105   ansible_ssh_port=22 ansible_ssh_user=root
+192.168.1.106   ansible_ssh_port=22 ansible_ssh_user=root
+
